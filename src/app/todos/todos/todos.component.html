@@ -1,0 +1,86 @@
+<div class="componentStyle">
+    <a data-bs-toggle="modal" data-bs-target="#mpTodos" style="float: right; margin-top: 1rem;" class="btn btn-primary"
+        (click)="addTodos()"><i class="fas fa-folder-plus"></i>ADD</a>
+    <table class="table table-hover">
+        <thead>
+            <tr>
+                <th scope="col">id</th>
+                <th scope="col">User-Id</th>
+                <th scope="col">Title</th>
+                <th scope="col">Action</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr *ngFor="let todos of lstTodos | paginate: { itemsPerPage: 5, currentPage: currentpage }">
+                <td>{{todos.id}}</td>
+                <td>{{todos.userId}}</td>
+                <td>{{todos.title}}</td>
+                <td>
+                    <a class="btn btn-primary" [routerLink]="['/todo',todos.id]"><i class="far fa-eye"></i></a>&nbsp;
+                    <a data-bs-toggle="modal" data-bs-target="#mpTodos" class="btn btn-secondary"><i
+                            class="fas fa-user-edit" (click)="editTodos(todos)"></i></a>&nbsp;
+                    <a class="btn btn-danger" (click)="deleteTodos(todos.id)"><i class="fas fa-trash-alt"></i></a>
+                </td>
+            </tr>
+            <tr>
+                <td colspan="4" style="text-align: center;">
+                    <pagination-controls (pageChange)="currentpage = $event"></pagination-controls>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+
+    <div class="modal fade" id="mpTodos" tabindex="-1" aria-labelledby="mpTododsTitle" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="mpTodosTitle">{{titleName}}</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <form [formGroup]="todosForm" #form="ngForm">
+                        <div class="modal-body">
+                            <div *ngIf="alertMessage" class="alert alert-primary" role="alert">
+                                {{alertMessage}}
+                            </div>
+                            <div class="form-group">
+                                <label for="txtUserId">User-Id</label>
+                                <input formControlName="userId" name="txtUserId" [(ngModel)]="todosModel.userId"
+                                    type="text" id="txtUserId" class="form-control">
+                                <div *ngIf="userId.touched && userId.invalid">
+                                    <div class="alert alert-danger" *ngIf="userId.errors['required']">
+                                        <h6>*Please Enter your User-Id</h6>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label for="txtTitle">Title</label>
+                                <input formControlName="title" name="txtTitle" [(ngModel)]="todosModel.title"
+                                    type="text" id="txtTitle" class="form-control">
+                                <div *ngIf="title.touched && title['invalid']">
+                                    <div class="alert alert-danger" *ngIf="title.errors['required']">
+                                        <h6>*Please Enter your Title</h6>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label for="txtcompleted">Completed</label>
+                                <input formControlName="completed" name="txtcompleted"
+                                    [(ngModel)]="todosModel.completed" type="text" id="txtcompleted"
+                                    class="form-control">
+                                <div *ngIf="completed.touched && completed['invalid']">
+                                    <div class="alert alert-danger" *ngIf="completed.errors['required']">
+                                        <h6>*Please Enter your completed</h6>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                    <button type="button" class=" btn btn-primary" (click)="saveTodos()">Save</button>
+                </div>
+            </div>
+        </div>
+    </div>

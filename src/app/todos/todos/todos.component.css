@@ -1,0 +1,11 @@
+
+  .button {
+    padding-left: 400px;
+ }
+ .form-control.ng-touched.ng-invalid { 
+  border: 2px solid red; 
+}
+h6{
+  color: rgb(219, 12, 47);
+
+}

@@ -1,0 +1,140 @@
+<div class="card componentStyle">
+    <table class="componentStyle" style="width: auto;">
+        <tr>
+            <td>
+                <!-- Button trigger modal -->
+                <div style="text-align: right;margin-bottom:6px;">
+                    <button type="button" (click)="addInvoice()" class="btn btn-primary" data-bs-toggle="modal"
+                        data-bs-target="#mpInvoice">
+                        <i class="fa fa-plus" aria-hidden="true"></i> ADD INVOICE
+                    </button>
+                </div>
+                <!--List-->
+                <div class="container-table100">
+                    <div class="wrap-table100">
+                        <div class="table100 ver1 m-b-110">
+                            <div class="table100-head">
+                                <table>
+                                    <thead>
+                                        <tr class="row100 head">
+                                            <th class="cell100 column1">#InvoiceNumber</th>
+                                            <th class="cell100 column2">Amount</th>
+                                            <th class="cell100 column3">CreatedBy</th>
+                                            <th class="cell100 column4">Action</th>
+                                        </tr>
+                                    </thead>
+                                </table>
+                            </div>
+                            <div class="table100-body js-pscroll">
+                                <table>
+                                    <tbody>
+                                        <tr class="row100 body" *ngFor="let invoice of listInvoices | paginate: { itemsPerPage: 5, currentPage: p }
+                                            ;index as itemIndex">
+
+                                            <td class="cell100 column1">
+                                                {{invoice.InvoiceNumber}}
+                                            </td>
+                                            <td class="cell100 column2">
+                                                {{invoice.Amount | number}}
+                                            </td>
+                                            <td class="cell100 column3">
+                                                {{invoice.CreatedBy}}
+                                            </td>
+                                            <td class="cell100 column4">
+                                                <button class="btn btn-info"><a
+                                                        [routerLink]="['/invoice-list',invoice.Id]"><i class="fa fa-eye"
+                                                            aria-hidden="true"></i></a></button>&nbsp;
+                                                <button (click)="editInvoice(invoice,itemIndex)" class="btn btn-success"
+                                                    data-bs-toggle="modal" data-bs-target="#mpInvoice"><i
+                                                        class="fas fa-edit"></i></button>&nbsp;
+                                                <button (click)="deleteInvoice(itemIndex)" class="btn btn-danger"><i
+                                                        class="fas fa-trash-alt"></i></button>
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td style="text-align:center;" colspan="4">
+                                                <pagination-controls (pageChange)="p = $event"></pagination-controls>
+                                            </td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+
+                </div>
+                <!-- Modal -->
+                <div class="modal fade" id="mpInvoice" tabindex="-1" aria-labelledby="invoiceModalLabel"
+                    aria-hidden="true">
+                    <div class="modal-dialog modal-dialog-centered">
+                        <div class="modal-content">
+                            <form [formGroup]="invoiceForm" (ngSubmit)="saveInvoiceDetail()">
+                                <div class="modal-header">
+                                    <h5 class="modal-title" id="invoiceModalLabel">
+                                        {{modalTitle}}
+                                    </h5>
+                                    <button type="button" class="btn-close" data-bs-dismiss="modal"
+                                        aria-label="Close"></button>
+                                </div>
+                                <div class="modal-body">
+                                    <div class="mb-3" style="text-align: left;">
+                                        <div *ngIf="alertMessage" class="alert alert-success" role="alert">
+                                            {{alertMessage}}
+                                        </div>
+                                    </div>
+                                    <div class="mb-3" style="text-align: left;">
+                                        <label class="form-label" for="txtInvoiceNumber">
+                                            Invoice Number
+                                        </label>
+                                        <input [(ngModel)]="formData.InvoiceNumber" formControlName="invoiceNumber"
+                                            class="form-control" type="text" placeholder="Enter Invoice Number"
+                                            id="txtInvoiceNumber">
+                                        <div *ngIf="invoiceNumber.touched&&invoiceNumber.errors">
+                                            <div *ngIf="invoiceNumber.errors['required']" class="alert alert-danger">
+                                                Invoice number is required
+                                            </div>
+                                            <div *ngIf="invoiceNumber.errors['minlength']" class="alert alert-danger">
+                                                Minimum length is {{invoiceNumber.errors['minlength']
+                                                .requiredLength}}
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="mb-3" style="text-align: left;">
+                                        <label class="form-label" for="txtAmount">
+                                            Amount
+                                        </label>
+                                        <input [(ngModel)]="formData.Amount" formControlName="amount" type="number"
+                                            class="form-control" placeholder="Enter Amount" id="txtAmount">
+                                        <div *ngIf="amount.touched&&amount.errors">
+                                            <div *ngIf="amount.errors['required']" class="alert alert-danger">
+                                                Invoice amount is required
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="mb-3" style="text-align: left;">
+                                        <label class="form-label" for="txtCreatedBy">
+                                            CreatedBy
+                                        </label>
+                                        <input [(ngModel)]="formData.CreatedBy" formControlName="createdBy" type="text"
+                                            class="form-control" placeholder="Enter CreatedBy" id="txtCreatedBy">
+                                        <div *ngIf="createdBy.touched&&createdBy.errors">
+                                            <div *ngIf="createdBy.errors['required']" class="alert alert-danger">
+                                                CreatedBy is required
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="modal-footer">
+                                    <button type="button" class="btn btn-secondary"
+                                        data-bs-dismiss="modal">Close</button>
+                                    <button type="submit" [disabled]="invoiceForm.invalid"
+                                        class="btn btn-primary">Save</button>
+                                </div>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            </td>
+        </tr>
+    </table>
+</div>

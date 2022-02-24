@@ -1,0 +1,85 @@
+<div class="componentStyle">
+    <a data-bs-toggle="modal" data-bs-target="#mpPost" style="float: right; margin-top: 1rem;" class="btn btn-primary"
+        (click)="addPost()"><i class="fas fa-folder-plus"></i>ADD</a>
+    <table class="table table-hover">
+        <thead>
+            <tr>
+                <th scope="col">id</th>
+                <th scope="col">User-Id</th>
+                <th scope="col">Title</th>
+                <th scope="col">Action</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr *ngFor="let post of lstPosts | paginate: { itemsPerPage: 5, currentPage: currentpage }">
+                <td>{{post.id}}</td>
+                <td>{{post.userId}}</td>
+                <td>{{post.title}}</td>
+                <td>
+                    <a class="btn btn-primary" [routerLink]="['/post',post.id]"><i class="far fa-eye"></i></a>&nbsp;
+                    <a data-bs-toggle="modal" data-bs-target="#mpPost" class="btn btn-secondary"><i
+                            class="fas fa-user-edit" (click)="editPost(post)"></i></a>&nbsp;
+                    <a class="btn btn-danger" (click)="deletePost(post.id)"><i class="fas fa-trash-alt"></i></a>
+                </td>
+            </tr>
+            <tr>
+                <td colspan="4" style="text-align: center;">
+                    <pagination-controls (pageChange)="currentpage = $event"></pagination-controls>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+
+    <div class="modal fade" id="mpPost" tabindex="-1" aria-labelledby="mpPostTitle" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="mpPostTitle">{{titleName}}</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <form [formGroup]="postForm">
+                        <div class="modal-body">
+                            <div *ngIf="alertMessage" class="alert alert-primary" role="alert">
+                                {{alertMessage}}
+                            </div>
+                            <div class="form-group">
+                                <label for="txtUserId">User-Id</label>
+                                <input formControlName="userId" name="txtUserId" [(ngModel)]="postModel.userId"
+                                    type="text" id="txtUserId" class="form-control">
+                                <div *ngIf="userId.touched && userId.invalid">
+                                    <div class="alert alert-danger" *ngIf="userId.errors['required']">
+                                        <h6>*Please Enter your User-Id</h6>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label for="txtTitle">Title</label>
+                                <input formControlName="title" name="txtTitle" [(ngModel)]="postModel.title" type="text"
+                                    id="txtTitle" class="form-control">
+                                <div *ngIf="title.touched && title.invalid">
+                                    <div class="alert alert-danger" *ngIf="title.errors['required']">
+                                        <h6>*Please Enter your Title</h6>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label for="txtBody">Body</label>
+                                <input formControlName="body" name="txtBody" [(ngModel)]="postModel.body" type="text"
+                                    id="txtBody" class="form-control">
+                                <div *ngIf="body.touched && body.invalid">
+                                    <div class="alert alert-danger" *ngIf="body.errors['required']">
+                                        <h6>*Please Enter your Body</h6>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                    <button type="button" class=" btn btn-primary" (click)="savePost()">Save</button>
+                </div>
+            </div>
+        </div>
+    </div>
